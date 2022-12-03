@@ -13,6 +13,6 @@ resource "aws_instance" "web" {
   iam_instance_profile        = var.instance_profile
   associate_public_ip_address = true
   tags = {
-    Name = "SampleApp"
+    Name = "Team2"
   }
 }
