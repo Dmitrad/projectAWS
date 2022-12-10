@@ -1,6 +1,6 @@
 
 resource "aws_iam_role" "deploy_role" {
-  name = "deploy-role-team2"
+  name = "deploy-role-team2-aws"
 
   assume_role_policy = <<EOF
 {
@@ -20,7 +20,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "codedeploy_policy" {
-  name = "deploy-policy-team2"
+  name = "deploy-policy-team2-aws"
   role = aws_iam_role.deploy_role.id
 
   policy = <<-EOF
@@ -45,19 +45,19 @@ resource "aws_iam_role_policy" "codedeploy_policy" {
 
 resource "aws_codedeploy_app" "example" {
   compute_platform = "Server"
-  name             = "MyDemoApplication"
+  name             = "MyDemoApplicationAWS"
 }
 
 resource "aws_codedeploy_deployment_group" "example" {
   app_name              = aws_codedeploy_app.example.name
-  deployment_group_name = "MyDeploymentGroup"
+  deployment_group_name = "MyDeploymentGroupAws"
   service_role_arn      = aws_iam_role.deploy_role.arn
 
-  ec2_tag_filter {
-    key   = "Name"
-    type  = "KEY_AND_VALUE"
-    value = "Team2"
-  }
+  # ec2_tag_filter {
+  #   key   = "Name"
+  #   type  = "KEY_AND_VALUE"
+  #   value = "Team2"
+  # }
 }
 
  

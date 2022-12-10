@@ -1,6 +1,6 @@
 resource "aws_iam_policy" "example" {
   #role = aws_iam_role.code_build.name
-  name = "build-policy-team2"
+  name = "build-policy-team2-aws"
 
   policy = <<POLICY
 {
@@ -71,8 +71,8 @@ resource "aws_iam_policy" "example" {
 POLICY
 }
 
-resource "aws_iam_role" "code_build" {
-  name = "codebuild-role-team2"
+resource "aws_iam_role" "code_build_aws" {
+  name = "codebuild-role-team2-aws"
 
   assume_role_policy = <<EOF
 {
@@ -91,15 +91,15 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "build-attach" {
-  role       = aws_iam_role.code_build.name
+  role       = aws_iam_role.code_build_aws.name
   policy_arn = aws_iam_policy.example.arn
 }
 
 resource "aws_codebuild_project" "example" {
-  name        = "aws-codebuild-project"
-  description = "aws_codebuild_project"
+  name        = "team2-project-aws"
+  description = "codebuild_project-aws"
 
-  service_role = aws_iam_role.code_build.arn
+  service_role = aws_iam_role.code_build_aws.arn
 
   artifacts {
     type = "CODEPIPELINE"

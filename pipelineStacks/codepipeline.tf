@@ -1,6 +1,6 @@
 
-resource "aws_iam_role" "codepipeline_role" {
-  name = "pipeline-role-team2"
+resource "aws_iam_role" "codepipeline_role_aws" {
+  name = "pipeline-team2-aws"
 
   assume_role_policy = <<EOF
 {
@@ -18,8 +18,8 @@ resource "aws_iam_role" "codepipeline_role" {
 EOF
 }
 
-resource "aws_iam_policy" "codepipeline_policy" {
-  name = "pipeline-policy-team2"
+resource "aws_iam_policy" "codepipeline_policy_aws" {
+  name = "pipeline-policy-team2-aws"
   #role = aws_iam_role.codepipeline_role.id
 
   policy = <<EOF
@@ -59,17 +59,17 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "test-attach" {
-  role       = aws_iam_role.codepipeline_role.name
-  policy_arn = aws_iam_policy.codepipeline_policy.arn
+  role       = aws_iam_role.codepipeline_role_aws.name
+  policy_arn = aws_iam_policy.codepipeline_policy_aws.arn
 }
 
 #####################
 # codepipeline code
 #####################
 
-resource "aws_codepipeline" "codepipeline" {
-  name     = "aws-team2-pipeline"
-  role_arn = aws_iam_role.codepipeline_role.arn
+resource "aws_codepipeline" "codepipeline_aws" {
+  name     = "team2-pipeline-autoscaling"
+  role_arn = aws_iam_role.codepipeline_role_aws.arn
 
   artifact_store {
     location = aws_s3_bucket.example.id
@@ -109,7 +109,7 @@ resource "aws_codepipeline" "codepipeline" {
       version          = "1"
 
       configuration = {
-        ProjectName = "aws-project"
+        ProjectName = "team2-project-aws"
       }
     }
   }
@@ -126,8 +126,8 @@ resource "aws_codepipeline" "codepipeline" {
       version         = "1"
 
       configuration = {
-        ApplicationName     = "MyDemoApplication"
-        DeploymentGroupName = "MyDeploymentGroup"
+        ApplicationName     = "MyDemoApplicationAws"
+        DeploymentGroupName = "MyDeploymentGroupAws"
       }
     }
   }

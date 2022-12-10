@@ -9,7 +9,7 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket = "dzmitry-bucket-team2"
+    bucket = "dzmitry-bucket-002"
     key    = "docs/myfile"
     region = "us-east-1"
   }
