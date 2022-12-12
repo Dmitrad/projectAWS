@@ -38,6 +38,34 @@ resource "aws_autoscaling_group" "images" {
 
 }
 
+resource "aws_autoscaling_policy" "images" {
+  name                   = "cpu-policy-images"
+  scaling_adjustment     = 1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 100
+  autoscaling_group_name = aws_autoscaling_group.images.name
+  policy_type = "SimpleScaling"
+}
+
+resource "aws_cloudwatch_metric_alarm" "images" {
+  alarm_name                = "images-cpu-allarm"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  evaluation_periods        = "2"
+  metric_name               = "CPUUtilization"
+  namespace                 = "AWS/EC2"
+  period                    = "120"
+  statistic                 = "Average"
+  threshold                 = "60"
+  alarm_description         = "This metric monitors ec2 cpu utilization"
+  insufficient_data_actions = []
+
+ dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.images.name
+  }
+  # alarm_description = "This metric monitors ec2 cpu utilization"
+  alarm_actions     = [aws_autoscaling_policy.images.arn]
+}
+
 resource "aws_autoscaling_group" "videos" {
   name                 = "videos"
   max_size             = 2
@@ -54,6 +82,8 @@ resource "aws_autoscaling_group" "videos" {
   }
 
 }
+
+
 resource "aws_lb" "devops" {
   name               = "team2"
   internal           = false
