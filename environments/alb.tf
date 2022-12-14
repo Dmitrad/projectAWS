@@ -48,7 +48,7 @@ resource "aws_autoscaling_policy" "images" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "images" {
-  alarm_name                = "images-cpu-allarm"
+  alarm_name                = "images-cpu-alarm"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "2"
   metric_name               = "CPUUtilization"
@@ -76,7 +76,7 @@ resource "aws_autoscaling_policy" "images_down" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "images_down" {
-  alarm_name                = "images-cpu-allarm"
+  alarm_name                = "imagesdown-cpu-alarm"
   comparison_operator       = "LessThanOrEqualToThreshold"
   evaluation_periods        = "2"
   metric_name               = "CPUUtilization"
@@ -109,6 +109,62 @@ resource "aws_autoscaling_group" "videos" {
     propagate_at_launch = true
   }
 
+}
+
+resource "aws_autoscaling_policy" "videos" {
+  name                   = "cpu-policy-videos"
+  scaling_adjustment     = 1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 100
+  autoscaling_group_name = aws_autoscaling_group.videos.name
+  policy_type = "SimpleScaling"
+}
+
+resource "aws_cloudwatch_metric_alarm" "videos" {
+  alarm_name                = "videos-cpu-alarm"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  evaluation_periods        = "2"
+  metric_name               = "CPUUtilization"
+  namespace                 = "AWS/EC2"
+  period                    = "120"
+  statistic                 = "Average"
+  threshold                 = "60"
+  alarm_description         = "This metric monitors ec2 cpu utilization"
+  insufficient_data_actions = []
+
+ dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.videos.name
+  }
+  # alarm_description = "This metric monitors ec2 cpu utilization"
+  alarm_actions     = [aws_autoscaling_policy.videos.arn]
+}
+
+resource "aws_autoscaling_policy" "videos_down" {
+  name                   = "cpu-policy-videosdown"
+  scaling_adjustment     = 1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 100
+  autoscaling_group_name = aws_autoscaling_group.videos.name
+  policy_type = "SimpleScaling"
+}
+
+resource "aws_cloudwatch_metric_alarm" "videos_down" {
+  alarm_name                = "videosdown-cpu-alarm"
+  comparison_operator       = "LessThanOrEqualToThreshold"
+  evaluation_periods        = "2"
+  metric_name               = "CPUUtilization"
+  namespace                 = "AWS/EC2"
+  period                    = "120"
+  statistic                 = "Average"
+  threshold                 = "50"
+  alarm_description         = "This metric monitors ec2 cpu utilization"
+  insufficient_data_actions = []
+
+ dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.videos.name
+  }
+  # alarm_description = "This metric monitors ec2 cpu utilization"
+  alarm_actions     = [aws_autoscaling_policy.videos_down.arn]
 }
 
 
