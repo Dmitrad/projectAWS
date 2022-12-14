@@ -68,7 +68,7 @@ resource "aws_cloudwatch_metric_alarm" "images" {
 
 resource "aws_autoscaling_policy" "images_down" {
   name                   = "cpu-policy-imagesdown"
-  scaling_adjustment     = 1
+  scaling_adjustment     = -1
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 100
   autoscaling_group_name = aws_autoscaling_group.images.name
@@ -141,7 +141,7 @@ resource "aws_cloudwatch_metric_alarm" "videos" {
 
 resource "aws_autoscaling_policy" "videos_down" {
   name                   = "cpu-policy-videosdown"
-  scaling_adjustment     = 1
+  scaling_adjustment     = -1
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 100
   autoscaling_group_name = aws_autoscaling_group.videos.name
